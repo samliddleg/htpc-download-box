@@ -16,11 +16,32 @@ services:
       - 8112:8112 # port for deluge web UI to be reachable from local network
     command: '-f "" -r 192.168.1.0/24' # enable firewall and route local network traffic
 
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - TRANSMISSION_WEB_HOME=/combustion-release/ #optional
+      - USER=username #optional
+      - PASS=password #optional
+    volumes:
+      - ${ROOT}/downloads:/downloads # downloads folder
+      - ${ROOT}/config/transmission:/config # config files
+      - ${ROOT}/watch:/watch # downloads folder
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
+
   deluge:
     container_name: deluge
     image: linuxserver/deluge:latest
     restart: unless-stopped
-    network_mode: service:vpn # run on the vpn network
+    #network_mode: service:vpn # run on the vpn network
+    network_mode: host # run on the vpn network
     environment:
       - PUID=${PUID} # default user id, defined in .env 
       - PGID=${PGID} # default group id, defined in .env
