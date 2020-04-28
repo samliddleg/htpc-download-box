@@ -17,6 +17,7 @@ services:
     command: '-f "" -r 192.168.1.0/24' # enable firewall and route local network traffic
 
   transmission-openvpn:
+    container_name: transmission-openvpn
     volumes:
       - ${ROOT}/data:/data # downloads folder
       - '/etc/localtime:/etc/localtime:ro'
@@ -26,7 +27,7 @@ services:
       - OPENVPN_CONFIG=UK Manchester
       - OPENVPN_USERNAME=p5008437
       - OPENVPN_PASSWORD=wXs5uGbnxe
-      - WEBPROXY_ENABLED=false
+      - WEBPROXY_ENABLED=true
       - LOCAL_NETWORK=192.168.0.0/16
     cap_add:
       - NET_ADMIN
