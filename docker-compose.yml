@@ -24,8 +24,8 @@ services:
       - CREATE_TUN_DEVICE=true
       - OPENVPN_PROVIDER=PIA
       - OPENVPN_CONFIG=UK London
-      - OPENVPN_USERNAME=user
-      - OPENVPN_PASSWORD=pass
+      - OPENVPN_USERNAME=p5008437
+      - OPENVPN_PASSWORD=wXs5uGbnxe
       - WEBPROXY_ENABLED=false
       - LOCAL_NETWORK=192.168.0.0/16
     cap_add:
