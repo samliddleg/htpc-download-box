@@ -16,42 +16,22 @@ services:
       - 8112:8112 # port for deluge web UI to be reachable from local network
     command: '-f "" -r 192.168.1.0/24' # enable firewall and route local network traffic
 
-  transmission-openvpn:
-    container_name: transmission-openvpn
-    volumes:
-      - ${ROOT}/data:/data # downloads folder
-      - '/etc/localtime:/etc/localtime:ro'
-    environment:
-      - CREATE_TUN_DEVICE=true
-      - OPENVPN_PROVIDER=PIA
-      - OPENVPN_CONFIG=UK Manchester
-      - OPENVPN_USERNAME=p5008437
-      - OPENVPN_PASSWORD=wXs5uGbnxe
-      - WEBPROXY_ENABLED=true
-      - LOCAL_NETWORK=192.168.7.7/16
-    cap_add:
-      - NET_ADMIN
-    logging:
-      driver: json-file
-      options:
-        max-size: 10m
-    ports:
-        - '9091:9091'
-    image: haugene/transmission-openvpn
-
-  deluge:
-    container_name: deluge
-    image: linuxserver/deluge:latest
-    restart: unless-stopped
-    #network_mode: service:vpn # run on the vpn network
-    network_mode: host # run on the vpn network
-    environment:
-      - PUID=${PUID} # default user id, defined in .env 
-      - PGID=${PGID} # default group id, defined in .env
-      - TZ=${TZ} # timezone, defined in .env
-    volumes:
-      - ${ROOT}/downloads:/downloads # downloads folder
-      - ${ROOT}/config/deluge:/config # config files
+    transmission:
+      image: linuxserver/transmission
+      container_name: transmission
+      environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=Europe/London
+      volumes:
+        - ${ROOT}/downloads:/downloads # downloads folder
+        - ${ROOT}/config:/config # config files
+        - ${ROOT}/watch:/watch
+      ports:
+        - 9091:9091
+        - 51413:51413
+        - 51413:51413/udp
+      restart: unless-stopped
 
   jackett:
     container_name: jackett
