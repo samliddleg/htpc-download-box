@@ -16,22 +16,27 @@ services:
       - 8112:8112 # port for deluge web UI to be reachable from local network
     command: '-f "" -r 192.168.1.0/24' # enable firewall and route local network traffic
 
-  transmission:
-    image: linuxserver/transmission
-    container_name: transmission
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
+  transmission-openvpn:
     volumes:
-      - ${ROOT}/downloads:/downloads # downloads folder
-      - ${ROOT}/config/transmission:/config # config files
-      - ${ROOT}/watch:/watch # downloads folder
+      - '/your/storage/path/:/data'
+      - '/etc/localtime:/etc/localtime:ro'
+    environment:
+      - CREATE_TUN_DEVICE=true
+      - OPENVPN_PROVIDER=PIA
+      - OPENVPN_CONFIG=UK London
+      - OPENVPN_USERNAME=user
+      - OPENVPN_PASSWORD=pass
+      - WEBPROXY_ENABLED=false
+      - LOCAL_NETWORK=192.168.0.0/16
+    cap_add:
+      - NET_ADMIN
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
     ports:
-      - 9091:9091
-      - 51413:51413
-      - 51413:51413/udp
-    restart: unless-stopped
+        - '9091:9091'
+    image: haugene/transmission-openvpn
 
   deluge:
     container_name: deluge
