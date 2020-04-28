@@ -16,22 +16,22 @@ services:
       - 8112:8112 # port for deluge web UI to be reachable from local network
     command: '-f "" -r 192.168.1.0/24' # enable firewall and route local network traffic
 
-    transmission:
-      image: linuxserver/transmission
-      container_name: transmission
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=Europe/London
-      volumes:
-        - ${ROOT}/downloads:/downloads # downloads folder
-        - ${ROOT}/config:/config # config files
-        - ${ROOT}/watch:/watch
-      ports:
-        - 9091:9091
-        - 51413:51413
-        - 51413:51413/udp
-      restart: unless-stopped
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ${ROOT}/downloads:/downloads # downloads folder
+      - ${ROOT}/config:/config # config files
+      - ${ROOT}/watch:/watch
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
 
   jackett:
     container_name: jackett
